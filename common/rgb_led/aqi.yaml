@@ -9,7 +9,7 @@ script:
           then:
             - light.turn_on:
                 id: led_rgb
-                red: 100%
+                red: 30%
                 green: 0%
                 blue: 0%
   - id: show_acceptable
@@ -20,8 +20,8 @@ script:
           then:
             - light.turn_on:
                 id: led_rgb
-                red: 100%
-                green: 100%
+                red: 30%
+                green: 30%
                 blue: 0%
   - id: show_good
     then:
@@ -32,5 +32,5 @@ script:
             - light.turn_on:
                 id: led_rgb
                 red: 0%
-                green: 100%
+                green: 30%
                 blue: 0%

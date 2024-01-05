@@ -1,0 +1,38 @@
+# Example configuration for a NodeMCU v2 ESP8266 development board
+substitutions:
+  node_name: aqi-monitor
+  i2c_pin_scl: D1
+  i2c_pin_sda: D2
+  bme280_i2c_address: "0x76"
+  bme280_update_interval: 60s
+  bme280_offset_temperature: "-2"
+  bme280_offset_humidity: "10"
+  t6615_pin_tx: D4
+  t6615_pin_rx: D5
+  t6615_update_interval: 60s
+#  sds011_pin_tx: D3
+#  sds011_pin_rx: D6
+#  sds011_update_interval: 5min
+  led_pin_red: D7
+  led_pin_green: D8
+#  led_pin_blue: TX
+  led_pin_blue: D3
+
+esp8266:
+  board: nodemcuv2
+
+dashboard_import:
+  package_import_url: github://poksh/ESPHome-Air-Quality-Monitor/esphome-air-quality-monitor-esp8266-t6615.yaml@bedroom
+
+packages:
+  base: !include common/base.yaml
+  bme280: !include common/bme280.yaml
+  t6615: !include common/t6615.yaml
+#  sds011: !include common/sds011.yaml
+  rgb: !include common/rgb_led/esp8266.yaml
+#  monochromatic: !include common/rgb_led/esp8266_monochromatic.yaml
+#  no_aqi: !include common/no_feedback/aqi.yaml
+  no_calibration: !include common/no_feedback/calibration.yaml
+#  show_calibration: !include common/rgb_led/calibration.yaml
+  show_aqi: !include common/rgb_led/aqi.yaml
+  aqi: !include common/aqi.yaml

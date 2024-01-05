@@ -22,7 +22,7 @@ output:
   - platform: esp8266_pwm
     id: led_green
     pin: ${led_pin_green}
-    max_power: 0.011  # = 0.2^2.8
+    max_power: 0.11  # = ?^2.8
   - platform: esp8266_pwm
     id: led_blue
     pin: ${led_pin_blue}

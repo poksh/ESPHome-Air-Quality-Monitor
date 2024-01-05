@@ -17,38 +17,61 @@
 #
 # - update_aqi: script to update the AQI
 
-# The WHO guidelines work with 24-hour averages of the PM2.5 and PM10 sensors
-sensor:
+## The WHO guidelines work with 24-hour averages of the PM2.5 and PM10 sensors
+#sensor:
+#  - platform: template
+#    name: "${node_name} PM2.5 24h average"
+#    id: pm2_5_avg_24h
+#    icon: mdi:chemical-weapon
+#    unit_of_measurement: µg/m³
+#    lambda: |-
+#      return id(pm2_5_value).state;
+#    update_interval: 60s
+#    filters:
+#      - sliding_window_moving_average:
+#          window_size: 1440  # = 24 hours x 60 minutes
+#          send_every: 1
+#    on_value:
+#      then:
+#        - script.execute: update_aqi
+#  - platform: template
+#    name: "${node_name} PM10 24h average"
+#    id: pm10_avg_24h
+#    icon: mdi:chemical-weapon
+#    unit_of_measurement: µg/m³
+#    lambda: |-
+#      return id(pm10_value).state;
+#    update_interval: 60s
+#    filters:
+#      - sliding_window_moving_average:
+#          window_size: 1440  # = 24 hours x 60 minutes
+#          send_every: 1
+#    on_value:
+#      then:
+#        - script.execute: update_aqi
+
+# Show the user whether the sensor has been calibrated yet
+binary_sensor:
   - platform: template
-    name: "${node_name} PM2.5 24h average"
-    id: pm2_5_avg_24h
-    icon: mdi:chemical-weapon
-    unit_of_measurement: µg/m³
-    lambda: |-
-      return id(pm2_5_value).state;
-    update_interval: 60s
-    filters:
-      - sliding_window_moving_average:
-          window_size: 1440  # = 24 hours x 60 minutes
-          send_every: 1
-    on_value:
+    name: "${node_name} CO₂ sensor calibrated"
+    id: co2_calibrated
+    on_press:
       then:
-        - script.execute: update_aqi
-  - platform: template
-    name: "${node_name} PM10 24h average"
-    id: pm10_avg_24h
-    icon: mdi:chemical-weapon
-    unit_of_measurement: µg/m³
-    lambda: |-
-      return id(pm10_value).state;
-    update_interval: 60s
-    filters:
-      - sliding_window_moving_average:
-          window_size: 1440  # = 24 hours x 60 minutes
-          send_every: 1
-    on_value:
+        - switch.turn_on: show_calibrating
+    on_release:
       then:
-        - script.execute: update_aqi
+        - switch.turn_off: show_calibrating
+
+# The sensor starts in an uncalibrated state after boot
+esphome:
+  on_boot:
+#    priority: 500
+    priority: 1
+    then:
+      - binary_sensor.template.publish:
+          id: co2_calibrated
+#          state: OFF
+          state: ON
 
 # A textual presentation of the AQI: good, acceptable, bad
 text_sensor:
@@ -69,12 +92,12 @@ script:
               - sensor.in_range:
                   id: co2_value
                   above: ${aqi_co2_max_acceptable}
-              - sensor.in_range:
-                  id: pm2_5_avg_24h
-                  above: ${aqi_pm2_5_avg_24h_max_acceptable}
-              - sensor.in_range:
-                  id: pm10_avg_24h
-                  above: ${aqi_pm10_avg_24h_max_acceptable}
+#              - sensor.in_range:
+#                  id: pm2_5_avg_24h
+#                  above: ${aqi_pm2_5_avg_24h_max_acceptable}
+#              - sensor.in_range:
+#                  id: pm10_avg_24h
+#                  above: ${aqi_pm10_avg_24h_max_acceptable}
           then:
             - text_sensor.template.publish:
                 id: aqi
@@ -88,12 +111,12 @@ script:
                     - sensor.in_range:
                         id: co2_value
                         above: ${aqi_co2_max_good}
-                    - sensor.in_range:
-                        id: pm2_5_avg_24h
-                        above: ${aqi_pm2_5_avg_24h_max_good}
-                    - sensor.in_range:
-                        id: pm10_avg_24h
-                        above: ${aqi_pm10_avg_24h_max_good}
+#                    - sensor.in_range:
+#                        id: pm2_5_avg_24h
+#                        above: ${aqi_pm2_5_avg_24h_max_good}
+#                    - sensor.in_range:
+#                        id: pm10_avg_24h
+#                        above: ${aqi_pm10_avg_24h_max_good}
                 then:
                   - text_sensor.template.publish:
                       id: aqi

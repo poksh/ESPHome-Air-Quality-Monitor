@@ -35,6 +35,13 @@ ota:
 
 wifi:
   # Set up a Wi-Fi access point using the device name above
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+#  manual_ip:
+#    static_ip: 192.168.178.200
+#    gateway: 192.168.178.1
+#    subnet: 255.255.255.0
+#  fast_connect: false
   ap:
     password: "12345678"
 
