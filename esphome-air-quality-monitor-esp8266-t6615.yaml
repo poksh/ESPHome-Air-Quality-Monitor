@@ -6,7 +6,7 @@ substitutions:
   bme280_i2c_address: "0x76"
   bme280_update_interval: 60s
   bme280_offset_temperature: "-2"
-  bme280_offset_humidity: "10"
+  bme280_offset_humidity: "12"
   t6615_pin_tx: D4
   t6615_pin_rx: D5
   t6615_update_interval: 60s
