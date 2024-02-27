@@ -15,7 +15,7 @@ i2c:
   frequency: 200kHz
 
 sensor:
-  - platform: bme280
+  - platform: bme280_i2c
     temperature:
       id: t_value
       name: "${node_name} Temperature"
